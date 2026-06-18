@@ -24,8 +24,10 @@ ESP32 WROOM-32 · TB6612FNG motor driver · 2× BO motors + wheels + castor ·
 HC-SR04 ultrasonic · IR sensor (edge/anti-fall) · MPU6050 · SSD1306 0.96" OLED ·
 SG90 servo · LED(s) · 2S Li-ion pack + switch.
 
-**Add to BOM:** one 5V buck converter (MP1584 or LM2596) to power the ESP32/servo/
-HC-SR04 from the 7.4V pack. See `docs/wiring.md`.
+**Power (no extra parts):** 2S pack → ESP32 `VIN` (the board's onboard AMS1117
+regulator makes 3.3V) and → TB6612 `VM`. Everything else runs off the ESP32 `3V3`
+pin, including the HC-SR04 at 3.3V. No buck converter. Wi-Fi/BT stays OFF so the
+onboard regulator doesn't overheat. See `docs/wiring.md`.
 
 ## Repo structure
 ```
