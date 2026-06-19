@@ -2,7 +2,7 @@
 
 A tabletop "cat" robot on an ESP32 that learns to navigate with a tiny Q-learning
 table (4 states × 3 actions = 12 numbers), reacts to bumps with a hard MPU6050
-startle reflex, and shows mood through an OLED face, servo, and LED.
+startle reflex, and shows mood through an OLED face, and LED.
 
 ## Design summary
 
@@ -16,13 +16,13 @@ startle reflex, and shows mood through an OLED face, servo, and LED.
 - **Hard reflexes (outside the Q-loop):**
   - MPU6050 acceleration spike → reverse-and-turn + startled face.
   - IR edge sensor sees no table → immediate stop/reverse (anti-fall safety).
-- **Expression layer:** deterministic state machine maps behavior → OLED eyes + servo
+- **Expression layer:** deterministic state machine maps behavior → OLED eyes
   pose + LED color. Does not touch learning.
 
 ## Components used (from your kit)
 ESP32 WROOM-32 · TB6612FNG motor driver · 2× BO motors + wheels + castor ·
 HC-SR04 ultrasonic · IR sensor (edge/anti-fall) · MPU6050 · SSD1306 0.96" OLED ·
-SG90 servo · LED(s) · 2S Li-ion pack + switch.
+· LED(s) · 2S Li-ion pack + switch.
 
 **Power (no extra parts):** 2S pack → ESP32 `VIN` (the board's onboard AMS1117
 regulator makes 3.3V) and → TB6612 `VM`. Everything else runs off the ESP32 `3V3`
@@ -53,22 +53,21 @@ onboard regulator doesn't overheat. See `docs/wiring.md`.
 4. **Motors** — TB6612 forward/turn/reverse helpers with PWM cap.
 5. **Q-loop** — drop in `qtable.h`, implement ε-greedy + Bellman + NVS save/load.
 6. **Reflexes** — MPU startle override + IR anti-fall stop.
-7. **Expression layer** — map behavior states to OLED bitmaps + servo + LED.
+7. **Expression layer** — map behavior states to OLED bitmaps + LED.
 8. **Tuning** — thresholds, reward weights, PWM cap, timing on the real robot.
 
 ## Arduino libraries needed (Library Manager)
 - `Adafruit SSD1306` + `Adafruit GFX`
 - `Adafruit MPU6050` + `Adafruit Unified Sensor`
 - ESP32 `Preferences` (built into ESP32 core) for NVS
-- Servo: `ESP32Servo`
 - (HC-SR04, IR, TB6612 are driven with plain GPIO — no library needed.)
 
-## Status
-- [x] Plan + structure + wiring
-- [x] Step 1: Python simulator + exported table (`sim/qtable.h`)
-- [x] Step 2-7: firmware (`firmware/cat_robot/cat_robot.ino`) - minimal build
+## Plan
+-  Plan + structure + wiring
+-  Step 1: Python simulator + exported table (`sim/qtable.h`)
+-  Step 2-7: firmware (`firmware/cat_robot/cat_robot.ino`) - minimal build
       (ESP32, TB6612, 2x BO motors, HC-SR04, IR edge, OLED; no servo/MPU/LED)
-- [ ] Step 8: tune thresholds/speeds on the real robot
+-  Step 8: tune thresholds/speeds on the real robot
 
 ## Reward shaping (tuned in sim)
 Danger -6 (extra -5 if driven into). Close: Forward -1, else +1. Comfortable:
